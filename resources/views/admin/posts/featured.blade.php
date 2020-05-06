@@ -1,0 +1,1 @@
+<a id="featured" href="{{ route('admin.featured', $post->id) }} " class="btn btn-sm btn-info btn-featured" data-featured="{{$post->featured }}" data-id="{{$post->id }}"><i class="fas fa-star"></i></a>
