@@ -15,92 +15,118 @@
             </div>
         </div>
     </article>
-    <div class="row">
-        <div class="col-md-12">
-            @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-            @guest
-            <h3>You should <a href="{{ route('login') }}">login</a> before post a comments and give a likes.</h3>
-            @else
-            <div class="like_wrapper mb-3">
-                <button class="btn-like-post like-review @if($post->isLike()) btn-unlike @else btn-like @endif" data-model-id="{{ $post->id }}" data-type="1">
-                    @if($post->isLike()) Unlike @else  <i class="fa fa-heart" aria-hidden="true"></i> Like @endif
-                </button>
-                <div class="total_like mt-2">
-                    <span class="like_number"> {{ $post->likes->count() }}</span> <span class="like_desc">Total Like</span> 
-                </div>
-            </div>
-            <form method="POST" action="/comments/{{ $post->id }}">
-                @csrf
-                <div class="form-group">
-                    <label for="">Comment as {{ auth()->user()->name }}</label>
-                    <textarea name="text" class="form-control @error('text') is-invalid @enderror" cols="30"
-                        rows="10"> {{old('text')}} </textarea>
-                    @error('text')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Submit" class="btn btn-primary">
-                </div>
-            </form>
-            @endguest
-        </div>
-    </div>
     {{-- <div class="row">
         @foreach ($comments as $comment)
         <div class="col-md-12" style="border: 1px solid black;">
             <p>{{ $comment->user->name }}</p>
-            <p> {{ $comment->text }} </p>
-            <p>{{ $comment->created_at->diffForHumans() }}</p>
-            <div class="like_wrapper mb-3">
-                <button class="btn-like-comment like-review @if($comment->isLike()) btn-unlike @else btn-like @endif" data-model-id="{{ $comment->id }}" data-type="2">
-                    @if($comment->isLike()) Unlike @else  <i class="fa fa-heart" aria-hidden="true"></i> Like @endif
-                </button>
-                <div class="total_like mt-2">
-                    <span class="like_number"> {{ $comment->likes->count() }}</span> Total Like
-                </div>
+    <p> {{ $comment->text }} </p>
+    <p>{{ $comment->created_at->diffForHumans() }}</p>
+    <div class="like_wrapper mb-3">
+        <button class="btn-like-comment like-review @if($comment->isLike()) btn-unlike @else btn-like @endif"
+            data-model-id="{{ $comment->id }}" data-type="2">
+            @if($comment->isLike()) Unlike @else <i class="fa fa-heart" aria-hidden="true"></i> Like @endif
+        </button>
+        <div class="total_like mt-2">
+            <span class="like_number"> {{ $comment->likes->count() }}</span> Total Like
+        </div>
+    </div>
+</div>
+@endforeach
+{{ $comments->links() }}
+</div> --}}
+
+<div class="row">
+    <div class="col-md-12">
+        @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+        @guest
+        <h3>You should <a href="{{ route('login') }}">login</a> before post a comments and give a likes.</h3>
+        <div class="row">
+            <ul class="comment-section" id="comment">
+                @foreach ($comments as $comment)
+                <li class="comment user-comment">
+                    <div class="info">
+                        <a href="">{{ $comment->user->name }}</a>
+                        <span>{{ $comment->created_at->diffForHumans() }}</span>
+                    </div>
+                    <a href="" class="avatar pr-1">
+                        <img src="{{$comment->user->getPicture()}}" class="img-comment"
+                            style="width: 50px !important" alt="">
+                    </a>
+                    <p>{{$comment->text}}</p>
+                </li>
+                @endforeach
+            </ul>
+            {{ $comments->links() }}
+        </div>
+        @else
+        <div class="like_wrapper mb-3">
+            <button class="btn-like-post like-review @if($post->isLike()) btn-unlike @else btn-like @endif"
+                data-model-id="{{ $post->id }}" data-type="1">
+                @if($post->isLike()) Unlike @else <i class="fa fa-heart" aria-hidden="true"></i> Like @endif
+            </button>
+            <div class="total_like mt-2">
+                <span class="like_number"> {{ $post->likes->count() }}</span> <span class="like_desc">Total Like</span>
             </div>
         </div>
-        @endforeach
-        {{ $comments->links() }}
-    </div> --}}
-    <div class="row">
-        <ul class="comment-section" id="comment">
-            @foreach ($comments as $comment)
-            <li class="comment user-comment">
-                @guest
-                <div class="info">
-                    <a href="">{{ $comment->user->name }}</a>
-                    <span>{{ $comment->created_at->diffForHumans() }}</span>
+        <div class="row">
+            <ul class="comment-section" id="comment">
+                @foreach ($comments as $comment)
+                <li class="comment user-comment">
+                    <div class="info">
+                        <a href="">{{ $comment->user->name }}</a>
+                        <span>{{ $comment->created_at->diffForHumans() }}</span>
+                    </div>
+                    <a href="" class="avatar pr-1">
+                        <img src="{{$comment->user->getPicture()}}" class="img-comment"
+                            style="width: 50px !important" alt="">
+                    </a>
+                    <p>{{$comment->text}}</p>
+                    <div class="like_wrapper pt-2">
+                        <button
+                            class="btn-like-comment like-review mb-1 @if($comment->isLike()) btn-unlike @else btn-like @endif"
+                            data-model-id="{{ $comment->id }}" data-type="2">
+                            @if($comment->isLike()) Unlike @else <i class="fa fa-heart" aria-hidden="true"></i> Like
+                            @endif
+                        </button>
+                        <span class="like_number"> {{ $comment->likes->count() }}</span> <span class="like_desc">Total
+                            Like</span>
+                    </div>
+                </li>
+                @endforeach
+            </ul>
+            {{ $comments->links() }}
+        </div>
+        <form method="POST" action="/comments/{{ $post->id }}">
+            @csrf
+            <div class="form-group">
+                <label for="">Comment as {{ auth()->user()->name }}</label>
+                <textarea name="text" class="form-control @error('text') is-invalid @enderror" cols="30"
+                    rows="10"> {{old('text')}} </textarea>
+                @error('text')
+                <div class="invalid-feedback">
+                    {{ $message }}
                 </div>
-                <a href="" class="avatar">
-                    <img src="{{$comment->user->getPicture()}}" style="width: 35px !important; height: 35px !important" alt="">
-                </a>
-                <p>{{$comment->text}}</p>
-                @else
-                <div class="like_wrapper pt-2">
-                    <button class="btn-like-comment like-review mb-1 @if($comment->isLike()) btn-unlike @else btn-like @endif" data-model-id="{{ $comment->id }}" data-type="2">
-                        @if($comment->isLike()) Unlike @else  <i class="fa fa-heart" aria-hidden="true"></i> Like @endif
-                    </button>
-                    <span class="like_number"> {{ $comment->likes->count() }}</span> <span class="like_desc">Total Like</span> 
-                </div>    
-                @endguest
-            </li>
-            @endforeach
-        </ul>
-        {{ $comments->links() }}
+                @enderror
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-primary">
+            </div>
+        </form>
+        @endguest
     </div>
+</div>
 </div>
 @endsection
 @push('scripts')
 <script>
     $(document).ready(function () {
-            $('img').addClass('img-fluid').css("height", "auto");
-        })
+        $('img').addClass('img-fluid').css("height", "auto");
+    });
+    $(document).ready(function () {
+        $('.img-comment').css("height", "45px");
+    });
     $(document).on('click touchstart', '.btn-like', function () {
         let _this = $(this);
         let _url = "/like/" + _this.attr('data-type') + "/" + _this.attr('data-model-id');
@@ -114,7 +140,8 @@
         let _this = $(this);
         let _url = "/unlike/" + _this.attr('data-type') + "/" + _this.attr('data-model-id');
         $.get(_url, function (data) {
-            _this.removeClass('btn-danger btn-unlike').addClass('btn-primary btn-like').html('<i class="fa fa-heart" aria-hidden="true"></i> Like');
+            _this.removeClass('btn-danger btn-unlike').addClass('btn-primary btn-like').html(
+                '<i class="fa fa-heart" aria-hidden="true"></i> Like');
             let likeNumber = _this.parents('.like_wrapper').find('.like_number');
             likeNumber.html(parseInt(likeNumber.html()) - 1);
         });
@@ -160,7 +187,7 @@
             </div>
         </div>
         @endif
-        
+
         <!-- sidebar-widget -->
         <div class="sidebar-widget">
             <h3 class="sidebar-title">Socials</h3>
