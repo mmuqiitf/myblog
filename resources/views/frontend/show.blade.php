@@ -15,26 +15,6 @@
             </div>
         </div>
     </article>
-    {{-- <div class="row">
-        @foreach ($comments as $comment)
-        <div class="col-md-12" style="border: 1px solid black;">
-            <p>{{ $comment->user->name }}</p>
-    <p> {{ $comment->text }} </p>
-    <p>{{ $comment->created_at->diffForHumans() }}</p>
-    <div class="like_wrapper mb-3">
-        <button class="btn-like-comment like-review @if($comment->isLike()) btn-unlike @else btn-like @endif"
-            data-model-id="{{ $comment->id }}" data-type="2">
-            @if($comment->isLike()) Unlike @else <i class="fa fa-heart" aria-hidden="true"></i> Like @endif
-        </button>
-        <div class="total_like mt-2">
-            <span class="like_number"> {{ $comment->likes->count() }}</span> Total Like
-        </div>
-    </div>
-</div>
-@endforeach
-{{ $comments->links() }}
-</div> --}}
-
 <div class="row">
     <div class="col-md-12">
         @if(session('success'))
